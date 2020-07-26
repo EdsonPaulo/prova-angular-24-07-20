@@ -1,48 +1,55 @@
 import { Component } from '@angular/core';
 import { CepService } from './cep.service';
 
+import { PersonService } from './person/person.service';
+import Person from './person/person.model'
+
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss']
 })
+
 export class AppComponent {
-	title = 'teste-helpper'
+	title = 'Helper Teste'
 
-	persons = [
-		{
-			name: 'Teste',
-			cpf: 'Teste',
-			phone: 'Teste',
-			email: 'Teste',
-			cep: 'Teste',
-			state: 'Teste',
-			city: 'Teste',
-			street: 'Teste',
-		}
-	]
-	columns = ['name', 'cpf', 'phone', 'email', 'cep', 'state', 'city', 'street', 'actions']
-	selectedPerson
-	loading
+	personsList: Person[] = []
+	personsTableColumns = ['name', 'cpf', 'phone', 'email', 'cep', 'state', 'city', 'street', 'actions']
 
-	addPerson() {
-		this.selectedPerson = {}
+	selectedPerson: Person = null
+	loading: boolean = false
+
+	constructor(public cepService: CepService, private personService: PersonService) { }
+
+	ngOnInit() {
+		if (!this.personService.getAll() || !this.personService.getAll().length)
+			populateTable()
+		this.personsList = this.personService.getAll()
 	}
 
-	editPerson(person) {
+	onAddPerson() {
+		this.selectedPerson = new Person()
+	}
+
+	onViewPerson(person: Person) {
 		this.selectedPerson = { ...person }
 	}
 
-	deletePerson(person) {
-		remove(person)
-		this.persons = JSON.parse(get())
+	onEditPerson(person: Person) {
+		this.selectedPerson = { ...person }
 	}
 
-	changeCep(event) {
-		var cep = event.target.value
+	onDeletePerson(person: Person) {
+		this.personService.delete(person)
+		this.personsList = this.personService.getAll()
+	}
+
+
+	onChangeCep(event) {
+		let cep = event.target.value
 		if (cep.length == 8) {
 			this.loading = true
-			this.cep.getCep(cep).then((apiResponse: any) => {
+			this.cepService.getCep(cep).then((apiResponse: any) => {
 				if (apiResponse.erro) {
 					alert('Cep não encontrado')
 				} else {
@@ -61,14 +68,15 @@ export class AppComponent {
 		}
 	}
 
-	cancel() {
+
+	onCancel() {
 		this.selectedPerson = null
 	}
 
-	submit(person) {
+	onSubmit(person: Person) {
 		var error = false
-		this.columns.forEach(key => {
-			if (key != 'actions' && !person[key]) {
+		this.personsTableColumns.forEach((key: string) => {
+			if (key !== 'actions' && !person[key]) {
 				error = true
 			}
 		})
@@ -76,22 +84,16 @@ export class AppComponent {
 		if (error) {
 			alert('Erro!\nPreencha todos os campos!')
 		} else {
-			save(person)
-			this.persons = JSON.parse(get())
+			this.personService.save(person)
+			this.personsList = this.personService.getAll()
 			this.selectedPerson = null
 		}
 	}
-
-	ngOnInit() {
-		if (!get() || !JSON.parse(get()).length) populateTable()
-		this.persons = JSON.parse(get())
-	}
-
-	constructor(public cep: CepService) { }
 }
 
+
 function populateTable() {
-	var persons = [
+	let persons = [
 		{
 			name: 'Maria Flores',
 			cpf: '83321492075',
@@ -133,26 +135,5 @@ function populateTable() {
 			street: '1ª Travessa Clóvis de Almeida Maia',
 		}
 	]
-
-	localStorage.setItem('persons', JSON.stringify(persons))
-}
-
-function get() {
-	return localStorage.getItem('persons')
-}
-
-function save(person) {
-	var persons = JSON.parse(localStorage.getItem('persons'))
-	var index = persons.findIndex(foundPerson => Number(foundPerson.cpf) == Number(person.cpf))
-	if (index == -1) index = persons.length
-	persons[index] = person
-	localStorage.setItem('persons', JSON.stringify(persons))
-}
-
-function remove(person) {
-	var persons = JSON.parse(localStorage.getItem('persons'))
-	var cpf = Number(person.cpf)
-	var index = persons.findIndex(foundPerson => foundPerson.cpf == String(cpf))
-	persons.splice(index, 1)
 	localStorage.setItem('persons', JSON.stringify(persons))
 }
