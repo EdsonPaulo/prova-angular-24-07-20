@@ -4,6 +4,11 @@ import { CepService } from './cep.service';
 import { PersonService } from './person/person.service';
 import Person from './person/person.model'
 
+const personData = require("./person/personData.json")
+
+const populateTable = () =>  localStorage.setItem('persons', JSON.stringify(personData))
+
+
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
@@ -11,13 +16,14 @@ import Person from './person/person.model'
 })
 
 export class AppComponent {
-	title = 'Helper Teste'
+	title = 'Helpper Teste'
 
 	personsList: Person[] = []
 	personsTableColumns = ['name', 'cpf', 'phone', 'email', 'cep', 'state', 'city', 'street', 'actions']
 
 	selectedPerson: Person = null
 	loading: boolean = false
+	toView: boolean = false
 
 	constructor(public cepService: CepService, private personService: PersonService) { }
 
@@ -32,6 +38,7 @@ export class AppComponent {
 	}
 
 	onViewPerson(person: Person) {
+		this.toView = true
 		this.selectedPerson = { ...person }
 	}
 
@@ -49,39 +56,46 @@ export class AppComponent {
 		let cep = event.target.value
 		if (cep.length == 8) {
 			this.loading = true
-			this.cepService.getCep(cep).then((apiResponse: any) => {
-				if (apiResponse.erro) {
-					alert('Cep não encontrado')
-				} else {
-					this.selectedPerson = {
-						...this.selectedPerson,
-						cep: apiResponse.cep.replace('-', ''),
-						state: apiResponse.uf,
-						city: apiResponse.localidade,
-						street: apiResponse.logradouro
+			this.cepService.getCep(cep)
+				.then((apiResponse: any) => {
+					if (apiResponse.erro) {
+						this.loading = false
+						alert('Cep não encontrado')
 					}
-				}
-			}).catch(error => {
-				alert('Erro ao buscar o cep')
-				console.error(error)
-			}).finally(() => this.loading = false)
+					else {
+						this.selectedPerson = {
+							...this.selectedPerson,
+							cep: apiResponse.cep.replace('-', ''),
+							state: apiResponse.uf,
+							city: apiResponse.localidade,
+							street: apiResponse.logradouro
+						}
+					}
+				})
+				.catch(error => {
+					alert('Erro ao buscar o cep')
+					console.error(error)
+				})
+				.finally(() => this.loading = false)
 		}
+		else if (this.selectedPerson.cep)
+			this.selectedPerson = {
+				...this.selectedPerson,
+				state: null,
+				city: null,
+				street: null
+			}
 	}
 
-
+	//ao cancelar o formulário
 	onCancel() {
+		this.toView = false
 		this.selectedPerson = null
 	}
 
+	//submissão dos valores do form
 	onSubmit(person: Person) {
-		var error = false
-		this.personsTableColumns.forEach((key: string) => {
-			if (key !== 'actions' && !person[key]) {
-				error = true
-			}
-		})
-
-		if (error) {
+		if (!this.formIsValid()) {
 			alert('Erro!\nPreencha todos os campos!')
 		} else {
 			this.personService.save(person)
@@ -89,51 +103,20 @@ export class AppComponent {
 			this.selectedPerson = null
 		}
 	}
+
+	//validação do cep
+	cepInvalid() {
+		return this.selectedPerson.cep && !this.loading && !this.selectedPerson.state
+	}
+
+	//validação do formulário
+	formIsValid() {
+		if (this.selectedPerson.phone && this.selectedPerson.phone == 0)
+			alert('Erro!\nEsse número é invalido!')
+		return (this.selectedPerson && this.selectedPerson.name && this.selectedPerson.cpf &&
+			this.selectedPerson.phone!==null && this.selectedPerson.email && !this.cepInvalid())
+	}
 }
 
 
-function populateTable() {
-	let persons = [
-		{
-			name: 'Maria Flores',
-			cpf: '83321492075',
-			phone: '1533283928',
-			email: 'maria_f@gmail.com',
-			cep: '69906043',
-			state: 'AC',
-			city: 'Rio Branco',
-			street: 'Rua Arnaldo Aleixo (Conjunto Canaã)',
-		},
-		{
-			name: 'João Carlos',
-			cpf: '31213393035',
-			phone: '1532841040',
-			email: 'joao.c@gmail.com',
-			cep: '79096766',
-			state: 'MS',
-			city: 'Campo Grande',
-			street: 'Rua Rodolfho José Rospide da Motta',
-		},
-		{
-			name: 'Stephanie Dias',
-			cpf: '02085196020',
-			phone: '1533294040',
-			email: 'ste.dias@gmail.com',
-			cep: '23825080',
-			state: 'RJ',
-			city: 'Itaguaí',
-			street: 'Rua Mario Bastos Filho',
-		},
-		{
-			name: 'Mirtes Souza',
-			cpf: '33764389001',
-			phone: '1530178756',
-			email: 'irma.mirtes@gmail.com',
-			cep: '40420150',
-			state: 'BA',
-			city: 'Salvador',
-			street: '1ª Travessa Clóvis de Almeida Maia',
-		}
-	]
-	localStorage.setItem('persons', JSON.stringify(persons))
-}
+

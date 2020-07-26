@@ -1,7 +1,7 @@
 export default class Person {
     name: string
 	cpf: number
-	phone: string
+	phone: number
 	email: string
 	cep: number
 	state: string

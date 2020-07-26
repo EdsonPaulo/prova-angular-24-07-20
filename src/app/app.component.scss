@@ -1,20 +1,56 @@
-.main-wrapper {
-	.add-person {
-		position: absolute;
-		top: 28px;
-		right: 10vw;
+
+main {
+	display: flex;
+	display: -webkit-flex;
+	justify-content: center;
+	align-items: center;
+	padding: 40px;
+
+	.form {
+		margin: 0 50px;
+		max-width: 500px;
+
+		form {
+			padding: 20px;
+		}
+		
+		mat-form-field {
+			width: 100%;
+		}
+
+		mat-form-field.readonly {
+			color: grey;
+		}
+	}
+
+	table {
+		margin-top: 70px;
+		width: 100%;
+
+		.actions-btns {
+			display: flex;
+			
+		}
 	}
 }
 
-table, .form {
-	margin-left: 10vw;
-	width: 80vw;
-	border: 1px solid grey;
+nav {
+	width: 100%;
+	display: flex;
+	display: -webkit-flex;
+	align-items: center;
+	justify-content: space-between;
+	height: 60px;
+	background: rgb(5, 79, 139);
+	color: white;
+	padding: 0px 30px;
+	 
 }
 
-table {
-	margin-top: 70px;
+button {
+
 }
+
 
 .loading {
 	font-family: Roboto,"Helvetica Neue",sans-serif;
@@ -30,18 +66,6 @@ table {
 	z-index: 2;
 }
 
-.form {
-	margin-top: 50px;
-	padding: 16px;
-}
-
-mat-form-field {
-	width: 100%;
-}
-
-mat-form-field.readonly {
-	color: grey;
-}
 
 #buttons {
 	margin-top: 16px;
@@ -54,7 +78,7 @@ td {
 }
 
 .action {
-	color: blue;
+	color: rgb(4, 0, 255);
 	cursor: pointer;
 }
 

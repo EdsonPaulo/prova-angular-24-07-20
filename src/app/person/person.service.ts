@@ -5,14 +5,14 @@ import Person from './person.model'
 @Injectable({
   providedIn: 'root'
 })
+
 export class PersonService {
 
   constructor() { }
 
   public getAll() {
     let persons = localStorage.getItem('persons')
-    if(persons)
-      return JSON.parse(persons)
+    if(persons) return JSON.parse(persons)
     return null
   }
 
