@@ -19,13 +19,13 @@ describe('AppComponent', () => {
   it(`should have as title 'teste-helpper'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('teste-helpper');
+    expect(app.title).toEqual('Helpper Teste');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('teste-helpper app is running!');
+    expect(compiled.querySelector('nav h1 span').textContent).toContain('Helpper Teste');
   });
 });

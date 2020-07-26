@@ -16,10 +16,6 @@ export class PersonService {
     return null
   }
 
-  public getOne() {
-
-  }
-
   public save(person: Person) {
     let persons = JSON.parse(localStorage.getItem('persons'))
     let index = persons.findIndex((foundPerson: Person) => Number(foundPerson.cpf) == Number(person.cpf))

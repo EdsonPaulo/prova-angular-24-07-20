@@ -1,4 +1,16 @@
 
+nav {
+	width: 100%;
+	display: flex;
+	display: -webkit-flex;
+	align-items: center;
+	justify-content: space-between;
+	height: 60px;
+	background: rgb(5, 79, 139);
+	color: white;
+	padding: 0px 30px;
+}
+
 main {
 	display: flex;
 	display: -webkit-flex;
@@ -29,41 +41,12 @@ main {
 
 		.actions-btns {
 			display: flex;
-			
+		}
+
+		td {
+			font-size: 12px;
 		}
 	}
-}
-
-nav {
-	width: 100%;
-	display: flex;
-	display: -webkit-flex;
-	align-items: center;
-	justify-content: space-between;
-	height: 60px;
-	background: rgb(5, 79, 139);
-	color: white;
-	padding: 0px 30px;
-	 
-}
-
-button {
-
-}
-
-
-.loading {
-	font-family: Roboto,"Helvetica Neue",sans-serif;
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 100vh;
-	width: 100vw;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background-color: rgba(212, 212, 212, 0.7);
-	z-index: 2;
 }
 
 
@@ -71,17 +54,4 @@ button {
 	margin-top: 16px;
 	display: flex;
 	justify-content: space-around;
-}
-
-td {
-	font-size: 12px;
-}
-
-.action {
-	color: rgb(4, 0, 255);
-	cursor: pointer;
-}
-
-.action:hover {
-	background-color: aqua;
 }

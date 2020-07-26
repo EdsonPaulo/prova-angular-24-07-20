@@ -7,7 +7,6 @@ import { MatToolbarModule } from '@angular/material/toolbar'
 import {MatButtonModule} from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input';
-import {MatCardModule} from '@angular/material/card';
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -23,13 +22,12 @@ import { CepService } from './cep.service';
 		BrowserModule,
 		BrowserAnimationsModule,
 		FormsModule,
+		MatIconModule,
 		MatTableModule,
 		MatButtonModule,
 		MatInputModule,
 		MatProgressSpinnerModule,
 		MatToolbarModule,
-		MatCardModule,
-		MatIconModule,
 		HttpClientModule,
 	],
 	providers: [CepService],
